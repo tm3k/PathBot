@@ -94,11 +94,9 @@ while True:
     if booly[185] == True: #if the last rows trade signal is oversold tweet pic and chart
         print('a')
         tweet = f"-PATHBOT-\n\n$BTC #Bitcoin\n{price[99]}\nOVERSOLD\nBUY SPOT\n\n-PATHBOT-"
-        mpf.plot(df2, type='candle', title = "PathBot BTCUSD 4h", datetime_format=' %A, %d-%m-%Y', savefig='upload.png', volume = True, xrotation=20)
+        mc = mpf.make_marketcolors(up='w',down='b')
+        s  = mpf.make_mpf_style(marketcolors=mc)
+        mpf.plot(df2, type='candle', title = "PathBot BTCUSD 4h", datetime_format=' %A, %d-%m-%Y', savefig='upload.png', volume = True, xrotation=20, style = s)
         picpath = 'upload.png'
         api.update_with_media(picpath,tweet)
     t.sleep(3600) #Scans the 4h chart every 1 hour 
-
-
-
-
