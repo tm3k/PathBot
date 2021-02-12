@@ -88,12 +88,16 @@ while True:
     var = df['Trade'].tail(1)
     booly = var.str.contains('Oversold')
     price = df['close']
-    mpf.plot(df2, type='candle', title = "PathBot BTCUSD 4h", datetime_format=' %A, %d-%m-%Y', savefig='upload.png', volume = True, xrotation=20)
+
+    #plots
+    mc = mpf.make_marketcolors(up='w',down='b')
+    s  = mpf.make_mpf_style(marketcolors=mc)
+    mpf.plot(df2, type='candle', axtitle = "PathBot BTCUSD 4h", datetime_format=' %A, %d-%m-%Y', savefig='upload.png', volume = True, xrotation=20, style = s)
     # Prints last row in the df for the viewer to see
     print(df.tail(1))
     if booly[185] == True: #if the last rows trade signal is oversold tweet pic and chart
         print('a')
-        tweet = f"-PATHBOT-\n\n$BTC #Bitcoin\n{price[99]}\nOVERSOLD\nBUY SPOT\n\n-PATHBOT-"
+        tweet = f"-PATHBOT-\n\n$BTC #Bitcoin\n{price[99]}\nRSI BELOW 30\nBUY SPOT\n\n-PATHBOT-"
         mc = mpf.make_marketcolors(up='w',down='b')
         s  = mpf.make_mpf_style(marketcolors=mc)
         mpf.plot(df2, type='candle', title = "PathBot BTCUSD 4h", datetime_format=' %A, %d-%m-%Y', savefig='upload.png', volume = True, xrotation=20, style = s)
