@@ -29,6 +29,7 @@ while True:
     close_val = []
     time_val = []                                                         
     pandasdti = []
+    volume = []
 
     for kline in client.get_historical_klines_generator("BTCUSDT", Client.KLINE_INTERVAL_4HOUR, "1 months ago UTC"):
         
@@ -47,6 +48,7 @@ while True:
         high_val.append(float(kline[2]))
         low_val.append(float(kline[3]))
         close_val.append(float(kline[4]))
+        volume.append(float(kline[5]))
         
 
     # Combines ohlc value lists into one object then creates a pandas dataframe with that data.
@@ -57,6 +59,7 @@ while True:
     zippedList2 = list(zip(pandasdti, open_val, high_val, low_val, close_val))
     df2 = pd.DataFrame(zippedList2, columns = ['datetime', 'open' , 'high', 'low', 'close'])
     df2 = df2.set_index(['datetime'])
+    df2['volume'] = volume 
 
     # RSI indicator added to DF
     RSI = TA.RSI(df)
@@ -85,13 +88,13 @@ while True:
     var = df['Trade'].tail(1)
     booly = var.str.contains('Oversold')
     price = df['close']
-
+    mpf.plot(df2, type='candle', title = "PathBot BTCUSD 4h", datetime_format=' %A, %d-%m-%Y', savefig='upload.png', volume = True, xrotation=20)
     # Prints last row in the df for the viewer to see
     print(df.tail(1))
     if booly[185] == True: #if the last rows trade signal is oversold tweet pic and chart
         print('a')
-        tweet = f"       -PATHBOT-\n\n$BTC #Bitcoin - {price[99]} - OVERSOLD\nBUY SPOT\n\n       -PATHBOT-"
-        mpf.plot(df2, type='candle', title = "PathBot BTCUSD 4h", datetime_format=' %A, %d-%m-%Y', tight_layout=True, savefig='upload.png')
+        tweet = f"-PATHBOT-\n\n$BTC #Bitcoin\n{price[99]}\nOVERSOLD\nBUY SPOT\n\n-PATHBOT-"
+        mpf.plot(df2, type='candle', title = "PathBot BTCUSD 4h", datetime_format=' %A, %d-%m-%Y', savefig='upload.png', volume = True, xrotation=20)
         picpath = 'upload.png'
         api.update_with_media(picpath,tweet)
     t.sleep(3600) #Scans the 4h chart every 1 hour 
